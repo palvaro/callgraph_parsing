@@ -1,0 +1,1196 @@
+{
+    "data": [
+        {
+            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+            "spans": [
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "47457d38c995a04e",
+                    "operationName": "kubernetes:kubernetesenv.istio-system(kubernetesenv)",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "271022fcd05956f"
+                        }
+                    ],
+                    "startTime": 1563326342252502,
+                    "duration": 113,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "istio-mixer"
+                        }
+                    ],
+                    "logs": [
+                        {
+                            "timestamp": 1563326342252614,
+                            "fields": [
+                                {
+                                    "key": "adapter",
+                                    "type": "string",
+                                    "value": "kubernetesenv"
+                                },
+                                {
+                                    "key": "error",
+                                    "type": "string",
+                                    "value": "false"
+                                },
+                                {
+                                    "key": "handler",
+                                    "type": "string",
+                                    "value": "kubernetesenv.istio-system"
+                                },
+                                {
+                                    "key": "meshFunction",
+                                    "type": "string",
+                                    "value": "kubernetes"
+                                },
+                                {
+                                    "key": "response_code",
+                                    "type": "string",
+                                    "value": "OK"
+                                },
+                                {
+                                    "key": "response_message",
+                                    "type": "string",
+                                    "value": ""
+                                }
+                            ]
+                        }
+                    ],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "271022fcd05956f",
+                    "operationName": "/istio.mixer.v1.Mixer/Check",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "dc9c6bf062c4da0e"
+                        }
+                    ],
+                    "startTime": 1563326342252390,
+                    "duration": 273,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "istio-mixer"
+                        },
+                        {
+                            "key": "hostname",
+                            "type": "string",
+                            "value": "istio-policy-fc4fcdcd-8jx5b"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "server"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p2",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "4a2e0bcc2072ff9a",
+                    "operationName": "/istio.mixer.v1.Mixer/Check",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "c60a4d0e38450012"
+                        }
+                    ],
+                    "startTime": 1563326342328009,
+                    "duration": 410,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "istio-mixer"
+                        },
+                        {
+                            "key": "hostname",
+                            "type": "string",
+                            "value": "istio-policy-fc4fcdcd-8jx5b"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "server"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p2",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "d2a01d95d0a4d21",
+                    "operationName": "kubernetes:kubernetesenv.istio-system(kubernetesenv)",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "e36e1ddffd78c8c"
+                        }
+                    ],
+                    "startTime": 1563326342269221,
+                    "duration": 66,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "istio-mixer"
+                        }
+                    ],
+                    "logs": [
+                        {
+                            "timestamp": 1563326342269286,
+                            "fields": [
+                                {
+                                    "key": "adapter",
+                                    "type": "string",
+                                    "value": "kubernetesenv"
+                                },
+                                {
+                                    "key": "error",
+                                    "type": "string",
+                                    "value": "false"
+                                },
+                                {
+                                    "key": "handler",
+                                    "type": "string",
+                                    "value": "kubernetesenv.istio-system"
+                                },
+                                {
+                                    "key": "meshFunction",
+                                    "type": "string",
+                                    "value": "kubernetes"
+                                },
+                                {
+                                    "key": "response_code",
+                                    "type": "string",
+                                    "value": "OK"
+                                },
+                                {
+                                    "key": "response_message",
+                                    "type": "string",
+                                    "value": ""
+                                }
+                            ]
+                        }
+                    ],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "e36e1ddffd78c8c",
+                    "operationName": "/istio.mixer.v1.Mixer/Check",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "baa123a0ef04680a"
+                        }
+                    ],
+                    "startTime": 1563326342269133,
+                    "duration": 212,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "istio-mixer"
+                        },
+                        {
+                            "key": "hostname",
+                            "type": "string",
+                            "value": "istio-policy-fc4fcdcd-8jx5b"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "server"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p2",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "22ed5de54aa508cd",
+                    "operationName": "kubernetes:kubernetesenv.istio-system(kubernetesenv)",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "4a2e0bcc2072ff9a"
+                        }
+                    ],
+                    "startTime": 1563326342328273,
+                    "duration": 88,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "istio-mixer"
+                        }
+                    ],
+                    "logs": [
+                        {
+                            "timestamp": 1563326342328361,
+                            "fields": [
+                                {
+                                    "key": "adapter",
+                                    "type": "string",
+                                    "value": "kubernetesenv"
+                                },
+                                {
+                                    "key": "error",
+                                    "type": "string",
+                                    "value": "false"
+                                },
+                                {
+                                    "key": "handler",
+                                    "type": "string",
+                                    "value": "kubernetesenv.istio-system"
+                                },
+                                {
+                                    "key": "meshFunction",
+                                    "type": "string",
+                                    "value": "kubernetes"
+                                },
+                                {
+                                    "key": "response_code",
+                                    "type": "string",
+                                    "value": "OK"
+                                },
+                                {
+                                    "key": "response_message",
+                                    "type": "string",
+                                    "value": ""
+                                }
+                            ]
+                        }
+                    ],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "24a546c54ec44312",
+                    "operationName": "productpage.default.svc.cluster.local:9080/productpage",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "348188615445f9d4"
+                        }
+                    ],
+                    "startTime": 1563326342241007,
+                    "duration": 96425,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "node_id",
+                            "type": "string",
+                            "value": "sidecar~10.1.0.213~productpage-v1-7868c55995-qcfr8.default~default.svc.cluster.local"
+                        },
+                        {
+                            "key": "guid:x-request-id",
+                            "type": "string",
+                            "value": "22023ec5-f2ad-96b4-9a46-46f092abbeda"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://localhost/productpage"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "downstream_cluster",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "user_agent",
+                            "type": "string",
+                            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+                        },
+                        {
+                            "key": "http.protocol",
+                            "type": "string",
+                            "value": "HTTP/1.1"
+                        },
+                        {
+                            "key": "request_size",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "inbound|9080|http|productpage.default.svc.cluster.local"
+                        },
+                        {
+                            "key": "http.status_code",
+                            "type": "string",
+                            "value": "200"
+                        },
+                        {
+                            "key": "response_size",
+                            "type": "string",
+                            "value": "5286"
+                        },
+                        {
+                            "key": "response_flags",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p3",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "94af4f4226bd4265",
+                    "operationName": "details.default.svc.cluster.local:9080/*",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "24a546c54ec44312"
+                        }
+                    ],
+                    "startTime": 1563326342249926,
+                    "duration": 8384,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "node_id",
+                            "type": "string",
+                            "value": "sidecar~10.1.0.213~productpage-v1-7868c55995-qcfr8.default~default.svc.cluster.local"
+                        },
+                        {
+                            "key": "guid:x-request-id",
+                            "type": "string",
+                            "value": "22023ec5-f2ad-96b4-9a46-46f092abbeda"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://details:9080/details/0"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "downstream_cluster",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "user_agent",
+                            "type": "string",
+                            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+                        },
+                        {
+                            "key": "http.protocol",
+                            "type": "string",
+                            "value": "HTTP/1.1"
+                        },
+                        {
+                            "key": "request_size",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "outbound|9080||details.default.svc.cluster.local"
+                        },
+                        {
+                            "key": "http.status_code",
+                            "type": "string",
+                            "value": "200"
+                        },
+                        {
+                            "key": "response_size",
+                            "type": "string",
+                            "value": "178"
+                        },
+                        {
+                            "key": "response_flags",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p3",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "cc583ea1a012a468",
+                    "operationName": "reviews.default.svc.cluster.local:9080/*",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "24a546c54ec44312"
+                        }
+                    ],
+                    "startTime": 1563326342267572,
+                    "duration": 67171,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "node_id",
+                            "type": "string",
+                            "value": "sidecar~10.1.0.213~productpage-v1-7868c55995-qcfr8.default~default.svc.cluster.local"
+                        },
+                        {
+                            "key": "guid:x-request-id",
+                            "type": "string",
+                            "value": "22023ec5-f2ad-96b4-9a46-46f092abbeda"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://reviews:9080/reviews/0"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "downstream_cluster",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "user_agent",
+                            "type": "string",
+                            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+                        },
+                        {
+                            "key": "http.protocol",
+                            "type": "string",
+                            "value": "HTTP/1.1"
+                        },
+                        {
+                            "key": "request_size",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "outbound|9080||reviews.default.svc.cluster.local"
+                        },
+                        {
+                            "key": "http.status_code",
+                            "type": "string",
+                            "value": "200"
+                        },
+                        {
+                            "key": "response_size",
+                            "type": "string",
+                            "value": "379"
+                        },
+                        {
+                            "key": "response_flags",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p3",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "baa123a0ef04680a",
+                    "operationName": "async outbound|9091||istio-policy.istio-system.svc.cluster.local egress",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "4417aa5601b925b6"
+                        }
+                    ],
+                    "startTime": 1563326342268336,
+                    "duration": 2933,
+                    "tags": [
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "outbound|9091||istio-policy.istio-system.svc.cluster.local"
+                        },
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "grpc.status_code",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p4",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "4417aa5601b925b6",
+                    "operationName": "reviews.default.svc.cluster.local:9080/*",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "cc583ea1a012a468"
+                        }
+                    ],
+                    "startTime": 1563326342268066,
+                    "duration": 66225,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "node_id",
+                            "type": "string",
+                            "value": "sidecar~10.1.0.212~reviews-v2-685896c86b-rszqb.default~default.svc.cluster.local"
+                        },
+                        {
+                            "key": "guid:x-request-id",
+                            "type": "string",
+                            "value": "22023ec5-f2ad-96b4-9a46-46f092abbeda"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://reviews:9080/reviews/0"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "downstream_cluster",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "user_agent",
+                            "type": "string",
+                            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+                        },
+                        {
+                            "key": "http.protocol",
+                            "type": "string",
+                            "value": "HTTP/1.1"
+                        },
+                        {
+                            "key": "request_size",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "inbound|9080|http|reviews.default.svc.cluster.local"
+                        },
+                        {
+                            "key": "http.status_code",
+                            "type": "string",
+                            "value": "200"
+                        },
+                        {
+                            "key": "response_size",
+                            "type": "string",
+                            "value": "379"
+                        },
+                        {
+                            "key": "response_flags",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p4",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "cee7b24edb58aa9e",
+                    "operationName": "ratings.default.svc.cluster.local:9080/*",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "4417aa5601b925b6"
+                        }
+                    ],
+                    "startTime": 1563326342325692,
+                    "duration": 4347,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "node_id",
+                            "type": "string",
+                            "value": "sidecar~10.1.0.212~reviews-v2-685896c86b-rszqb.default~default.svc.cluster.local"
+                        },
+                        {
+                            "key": "guid:x-request-id",
+                            "type": "string",
+                            "value": "22023ec5-f2ad-96b4-9a46-46f092abbeda"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://ratings:9080/ratings/0"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "downstream_cluster",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "user_agent",
+                            "type": "string",
+                            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+                        },
+                        {
+                            "key": "http.protocol",
+                            "type": "string",
+                            "value": "HTTP/1.1"
+                        },
+                        {
+                            "key": "request_size",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "outbound|9080||ratings.default.svc.cluster.local"
+                        },
+                        {
+                            "key": "http.status_code",
+                            "type": "string",
+                            "value": "200"
+                        },
+                        {
+                            "key": "response_size",
+                            "type": "string",
+                            "value": "48"
+                        },
+                        {
+                            "key": "response_flags",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p4",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "348188615445f9d4",
+                    "operationName": "productpage.default.svc.cluster.local:9080/productpage",
+                    "references": [],
+                    "startTime": 1563326342240694,
+                    "duration": 97786,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "node_id",
+                            "type": "string",
+                            "value": "router~10.1.0.195~istio-ingressgateway-697bb8b4cc-6zkt4.istio-system~istio-system.svc.cluster.local"
+                        },
+                        {
+                            "key": "guid:x-request-id",
+                            "type": "string",
+                            "value": "22023ec5-f2ad-96b4-9a46-46f092abbeda"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://localhost/productpage"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "downstream_cluster",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "user_agent",
+                            "type": "string",
+                            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+                        },
+                        {
+                            "key": "http.protocol",
+                            "type": "string",
+                            "value": "HTTP/1.1"
+                        },
+                        {
+                            "key": "request_size",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "outbound|9080||productpage.default.svc.cluster.local"
+                        },
+                        {
+                            "key": "http.status_code",
+                            "type": "string",
+                            "value": "200"
+                        },
+                        {
+                            "key": "response_size",
+                            "type": "string",
+                            "value": "5286"
+                        },
+                        {
+                            "key": "response_flags",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p5",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "dc9c6bf062c4da0e",
+                    "operationName": "async outbound|9091||istio-policy.istio-system.svc.cluster.local egress",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "86ca9d34d8bb0187"
+                        }
+                    ],
+                    "startTime": 1563326342250539,
+                    "duration": 2991,
+                    "tags": [
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "outbound|9091||istio-policy.istio-system.svc.cluster.local"
+                        },
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "grpc.status_code",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p6",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "86ca9d34d8bb0187",
+                    "operationName": "details.default.svc.cluster.local:9080/*",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "94af4f4226bd4265"
+                        }
+                    ],
+                    "startTime": 1563326342250352,
+                    "duration": 7248,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "node_id",
+                            "type": "string",
+                            "value": "sidecar~10.1.0.211~details-v1-66cc9f7cdf-tb7pn.default~default.svc.cluster.local"
+                        },
+                        {
+                            "key": "guid:x-request-id",
+                            "type": "string",
+                            "value": "22023ec5-f2ad-96b4-9a46-46f092abbeda"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://details:9080/details/0"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "downstream_cluster",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "user_agent",
+                            "type": "string",
+                            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+                        },
+                        {
+                            "key": "http.protocol",
+                            "type": "string",
+                            "value": "HTTP/1.1"
+                        },
+                        {
+                            "key": "request_size",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "inbound|9080|http|details.default.svc.cluster.local"
+                        },
+                        {
+                            "key": "http.status_code",
+                            "type": "string",
+                            "value": "200"
+                        },
+                        {
+                            "key": "response_size",
+                            "type": "string",
+                            "value": "178"
+                        },
+                        {
+                            "key": "response_flags",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p6",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "c60a4d0e38450012",
+                    "operationName": "async outbound|9091||istio-policy.istio-system.svc.cluster.local egress",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "89a141f920fbe3e2"
+                        }
+                    ],
+                    "startTime": 1563326342327441,
+                    "duration": 1464,
+                    "tags": [
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "outbound|9091||istio-policy.istio-system.svc.cluster.local"
+                        },
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "grpc.status_code",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p7",
+                    "warnings": null
+                },
+                {
+                    "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                    "spanID": "89a141f920fbe3e2",
+                    "operationName": "ratings.default.svc.cluster.local:9080/*",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "3cd73ec67bde24a8348188615445f9d4",
+                            "spanID": "cee7b24edb58aa9e"
+                        }
+                    ],
+                    "startTime": 1563326342327191,
+                    "duration": 2529,
+                    "tags": [
+                        {
+                            "key": "component",
+                            "type": "string",
+                            "value": "proxy"
+                        },
+                        {
+                            "key": "node_id",
+                            "type": "string",
+                            "value": "sidecar~10.1.0.215~ratings-v1-75985d6d9c-xwp76.default~default.svc.cluster.local"
+                        },
+                        {
+                            "key": "guid:x-request-id",
+                            "type": "string",
+                            "value": "22023ec5-f2ad-96b4-9a46-46f092abbeda"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://ratings:9080/ratings/0"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "downstream_cluster",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "user_agent",
+                            "type": "string",
+                            "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+                        },
+                        {
+                            "key": "http.protocol",
+                            "type": "string",
+                            "value": "HTTP/1.1"
+                        },
+                        {
+                            "key": "request_size",
+                            "type": "string",
+                            "value": "0"
+                        },
+                        {
+                            "key": "upstream_cluster",
+                            "type": "string",
+                            "value": "inbound|9080|http|ratings.default.svc.cluster.local"
+                        },
+                        {
+                            "key": "http.status_code",
+                            "type": "string",
+                            "value": "200"
+                        },
+                        {
+                            "key": "response_size",
+                            "type": "string",
+                            "value": "48"
+                        },
+                        {
+                            "key": "response_flags",
+                            "type": "string",
+                            "value": "-"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p7",
+                    "warnings": null
+                }
+            ],
+            "processes": {
+                "p1": {
+                    "serviceName": "istio-mixer",
+                    "tags": [
+                        {
+                            "key": "ip",
+                            "type": "string",
+                            "value": "10.1.0.205"
+                        }
+                    ]
+                },
+                "p2": {
+                    "serviceName": "istio-mixer",
+                    "tags": [
+                        {
+                            "key": "ip",
+                            "type": "string",
+                            "value": "10.1.0.205"
+                        },
+                        {
+                            "key": "jaeger.version",
+                            "type": "string",
+                            "value": "Go-2.15.1dev"
+                        }
+                    ]
+                },
+                "p3": {
+                    "serviceName": "productpage.default",
+                    "tags": [
+                        {
+                            "key": "ip",
+                            "type": "string",
+                            "value": "10.1.0.213"
+                        }
+                    ]
+                },
+                "p4": {
+                    "serviceName": "reviews.default",
+                    "tags": [
+                        {
+                            "key": "ip",
+                            "type": "string",
+                            "value": "10.1.0.212"
+                        }
+                    ]
+                },
+                "p5": {
+                    "serviceName": "istio-ingressgateway",
+                    "tags": [
+                        {
+                            "key": "ip",
+                            "type": "string",
+                            "value": "10.1.0.195"
+                        }
+                    ]
+                },
+                "p6": {
+                    "serviceName": "details.default",
+                    "tags": [
+                        {
+                            "key": "ip",
+                            "type": "string",
+                            "value": "10.1.0.211"
+                        }
+                    ]
+                },
+                "p7": {
+                    "serviceName": "ratings.default",
+                    "tags": [
+                        {
+                            "key": "ip",
+                            "type": "string",
+                            "value": "10.1.0.215"
+                        }
+                    ]
+                }
+            },
+            "warnings": null
+        }
+    ],
+    "total": 0,
+    "limit": 0,
+    "offset": 0,
+    "errors": null
+}
