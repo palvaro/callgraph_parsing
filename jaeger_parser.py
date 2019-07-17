@@ -42,6 +42,12 @@ class JaegerParser():
                 parent.add_child(self.map[key])
             else:
                 self.root = self.map[key]
+
+
+rules = {
+    'operationName' : 'lambda x : x',
+    'spanID' : 'lambda x : x'
+}
             
 
 
@@ -51,6 +57,12 @@ p.process()
 
 print p.root
 
+nt = p.root.transform(rules)
+
+nt = nt.collapse()
+
 dot = Digraph()
-dotfile = p.root.todot(dot)
+dotfile = nt.todot(dot)
 dot.render("foo", view=True)
+
+
