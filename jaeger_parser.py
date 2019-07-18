@@ -55,35 +55,3 @@ class JaegerParser():
                 self.root = self.map[key]
 
 
-#rules = {
-#    'processID' : 'lambda x : x',
-#}
-
-#rules = {
-#    'operationName' : "lambda x : '' if x.startswith('async') or x.startswith('/istio') or x.startswith('kubernetes') else x",
-#    'processID' : 'lambda x : x'
-#}
-            
-rules = {
-    'serviceName' : 'lambda x : x',
-    #'process-ip' : 'lambda x : x',
-    'startTime' : 'lambda x : x',
-    'duration' : 'lambda x : x',
-}
-
-
-p = JaegerParser("trace2.json")
-p.process()
-
-
-print p.root
-
-nt = p.root.transform(rules)
-
-nt = nt.collapse(['serviceName'])
-
-dot = Digraph()
-dotfile = nt.todot(dot)
-dot.render("foo", view=True)
-
-
