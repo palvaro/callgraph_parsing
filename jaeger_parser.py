@@ -22,9 +22,11 @@ class JaegerParser():
             labels = {}
             for key in span:
                 t = type(span[key])
-                print("type " + str(t))
                 if t in (str, int, float):
+                    #print("yay %s" % key)
                     labels[key] = span[key]
+                #else:
+                #    print("nay %s - %s" % (key, t))
             for tag in span['tags']:
                 labels[tag['key']] = tag['value']
 
