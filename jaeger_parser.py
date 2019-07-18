@@ -51,3 +51,4 @@ class JaegerParser():
                 self.root = self.map[key]
 
 
+        return self.root
