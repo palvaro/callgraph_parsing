@@ -80,7 +80,7 @@ print p.root
 
 nt = p.root.transform(rules)
 
-nt = nt.collapse()
+nt = nt.collapse(['serviceName'])
 
 dot = Digraph()
 dotfile = nt.todot(dot)

@@ -43,13 +43,20 @@ class CallGraph():
 
         return new_node
 
-    def equiv(self, other):
+    def equiv(self, other, rule):
         if isinstance(other, self.__class__):
-            return self.labels == other.labels
+            #return self.labels == other.labels
+            if rule == []:
+                return self.labels == other.labels
+            else:
+                for lbl in rule:
+                    if self.labels[lbl] != other.labels[lbl]:
+                        return False
+                return True
         else:
             return False
 
-    def collapse(self):
+    def collapse(self, rule=[]):
         # this one is gonna be tricky
         new_node = CallGraph(self.labels)
 
@@ -58,13 +65,13 @@ class CallGraph():
             working.append(child)
 
         for child in working:
-            if child.equiv(self):
+            if child.equiv(self, rule):
                 print "samesies"
                 for c in child.children:
                     print "OOO"
                     working.append(c)
             else:
-                new_node.add_child(child.collapse()) 
+                new_node.add_child(child.collapse(rule)) 
 
         return new_node
         
