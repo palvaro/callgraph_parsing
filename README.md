@@ -52,5 +52,12 @@ Note that in all of these examples I am doing something trivial in the rule map.
  1) selecting a few fields, and implictly ignoring many others, and
  2) supplying the identity function as a lambda.
 
+Consider how (2) is going to generalize.  It is an abstraction function, mapping from a concrete domain into an abstract domain in which (hopefully) things that are "the same" can be meaningfully compared.  The two extreme cases are the identity function and the bottom function (implicitly defined for every label not mentioned in a rule map).  If everything is mapped to the identity function, an abstract trace is identical to its concrete trace (and hence no two abstract traces are the same).  If everything is mapped to bottom all abstract traces are identical but they contain no information.
 
- 
+What other kinds of abstraction functions are there?  There are presumably those that forget *some* of their input information (e.g., by truncating the input). Perhaps most interesting (to me) are the order-preserving abstraction functions we might implement.  For example:
+
+ * A function that maps from the domain of ephemeral ports to the domain of (0, 1, [...]) representing the order in which those ports were allocated.
+ * The same thing for process ids, thread ids, event ids, etc.
+ * A similar thing for real time
+
+Given a set of mapping function supplied by the user (one for each node label, at least implicitly), what properties do we want to assert about the functions?  Can we check these properties?
