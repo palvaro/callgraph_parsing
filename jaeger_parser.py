@@ -9,11 +9,17 @@ class JaegerParser():
         fp.close()
     
         self.map = {}
+       
 
 
     def process(self):
         data = self.jsn['data']
         assert(len(data) == 1)
+
+        processes = {}
+        for process in data[0]['processes']:
+            processes[process] = data[0]['processes'][process]
+
         for span in data[0]['spans']:
             #print span
             labels = {}
@@ -30,6 +36,11 @@ class JaegerParser():
                     if item['refType'] == "CHILD_OF":
                         labels["parent_span"] = item['spanID']
 
+            labels['serviceName'] = processes[span['processID']]['serviceName']
+            for tag in processes[span['processID']]['tags']:
+                #print "TAG is " + tag
+                labels['process-' + tag['key']] = tag['value']
+
             node = CallGraph(labels)
             self.map[span['spanID']] = node
 
@@ -44,14 +55,24 @@ class JaegerParser():
                 self.root = self.map[key]
 
 
-rules = {
-    'operationName' : 'lambda x : x',
-    'spanID' : 'lambda x : x'
-}
+#rules = {
+#    'processID' : 'lambda x : x',
+#}
+
+#rules = {
+#    'operationName' : "lambda x : '' if x.startswith('async') or x.startswith('/istio') or x.startswith('kubernetes') else x",
+#    'processID' : 'lambda x : x'
+#}
             
+rules = {
+    'serviceName' : 'lambda x : x',
+    #'process-ip' : 'lambda x : x',
+    'startTime' : 'lambda x : x',
+    'duration' : 'lambda x : x',
+}
 
 
-p = JaegerParser("trace.json")
+p = JaegerParser("trace2.json")
 p.process()
 
 

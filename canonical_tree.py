@@ -7,18 +7,26 @@ class CallGraph():
         self.children.add(child)
 
     def name(self):
-        return self.labels['spanID']
+        #return str(self.labels)
+        return self.label()
 
     def label(self):
-        return self.labels['operationName']
+        #return self.labels.values()[0]
+        #return str(self.labels)
+        st = ''
+        for k in self.labels:
+            st += k + '=' + str(self.labels[k]) + ","
+
+        return st
 
 
     def __str__(self):
-        return self.labels['spanID'] + '(' + ','.join(map(lambda x: str(x), self.children))  + ')'
+        return str(self.labels) + '(' + ','.join(map(lambda x: str(x), self.children))  + ')'
 
     def todot(self, dot):
         dot.node(self.name(), self.label())
         for c in self.children:
+            print "c is " + str(c)
             c.todot(dot)
             dot.edge(self.name(), c.name())
 
@@ -35,7 +43,7 @@ class CallGraph():
 
         return new_node
 
-    def __eq__(self, other):
+    def equiv(self, other):
         if isinstance(other, self.__class__):
             return self.labels == other.labels
         else:
@@ -50,11 +58,13 @@ class CallGraph():
             working.append(child)
 
         for child in working:
-            if child == self:
+            if child.equiv(self):
+                print "samesies"
                 for c in child.children:
+                    print "OOO"
                     working.append(c)
             else:
-                new_node.add_child(child.collapse) 
+                new_node.add_child(child.collapse()) 
 
         return new_node
         
