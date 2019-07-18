@@ -25,8 +25,32 @@ Step 2: project out just the labels we care about; in this simple case, just the
     rules1 = {
         'serviceName' : 'lambda x : x',
     }
-    new_root = p.root.transform(rules1)
+    new_root = root.transform(rules1)
 
 Step 3: simplify the graph so that adjacent, similarly-labeled nodes collapse into one:
 
-   collapsed_root = new_root.collapse() 
+    collapsed_root = new_root.collapse() 
+
+
+Here is a more complicated example, in which we retain some fields (timing info) for analysis, but define similarity w.r.t. collapsing
+only in terms of one label:
+
+    rules2 = {
+        'serviceName' : 'lambda x : x',
+        'startTime' : 'lambda x : x',
+        'duration' : 'lambda x : x',
+    }
+    tree = root.transform(rules2).collapse(['serviceName'])
+
+
+Take a look at the Jupyter notebook for examples and pictures.
+
+# Theory
+
+Note that in all of these examples I am doing something trivial in the rule map.  I am 
+
+ 1) selecting a few fields, and implictly ignoring many others, and
+ 2) supplying the identity function as a lambda.
+
+
+ 
