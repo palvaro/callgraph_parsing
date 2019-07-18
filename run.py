@@ -23,9 +23,14 @@ crule = ['serviceName']
 
 # draw the raw graph
 rules_raw = {
-    'spanID' : 'lambda x : x',
-    'operationName' : 'lambda x : x',
-    'serviceName' : 'lambda x : x',
+    'transform' : {
+        'spanID' : 'lambda x : x',
+        'operationName' : 'lambda x : x',
+        'serviceName' : 'lambda x : x',
+    },
+    'excise': {
+        'serviceName' : 'lambda x : x.startswith("istio-mixer")'
+    }
 }
 draw_graph(p.root.transform(rules_raw), "raw", [])
 
@@ -33,7 +38,12 @@ draw_graph(p.root.transform(rules_raw), "raw", [])
 
 #  project down to serviceName, classic LDFI style
 rules1 = {
-    'serviceName' : 'lambda x : x if not x.startswith("istio-mixer") else ""',
+    'transform' : {
+        'serviceName' : 'lambda x : x if not x.startswith("istio-mixer") else ""',
+    },
+    'excise': {
+        'serviceName' : 'lambda x : x.startswith("istio-mixer")'
+    }
 }
 draw_graph(p.root.transform(rules1), "ldfi-raw", crule)
 
@@ -43,9 +53,14 @@ draw_graph(p.root.transform(rules1).collapse(), "ldfi-clean", crule)
 
 # remember timing information as well
 rules2 = {
-    'serviceName' : 'lambda x : x',
-    'startTime' : 'lambda x : x',
-    'duration' : 'lambda x : x',
+    'transform' : {
+        'serviceName' : 'lambda x : x',
+        'startTime' : 'lambda x : x',
+        'duration' : 'lambda x : x',
+    },
+    'excise': {
+        'serviceName' : 'lambda x : x.startswith("istio-mixer")'
+    }
 }
 draw_graph(p.root.transform(rules2).collapse(), "ldfi2-raw", [])
 

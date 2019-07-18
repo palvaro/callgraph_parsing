@@ -17,8 +17,6 @@ class CallGraph():
         for k in self.labels:
             if k in rule or rule == []:
                 st += k + '=' + str(self.labels[k]) + ","
-            else:
-                print("nay %s with rule %s" % (k, rule))
 
 
         return st
@@ -35,7 +33,7 @@ class CallGraph():
         local = []
         for item in timeline:
             #ret += "(%s) before %s %s " % (", ".join(names), item[0].name(rule), item[1])
-            print("item is %s, type %s" % (item, type(item)))
+            #print("item is %s, type %s" % (item, type(item)))
 
             local.append({'faults': names[:], 'before-anchor': item[0].name(rule), 'event': item[1]})
             if item[1] == "END":
@@ -62,12 +60,25 @@ class CallGraph():
 
     def transform(self, rules):
         new_labels = {}
+        if 'transform' in rules and 'excise' in rules:
+            xform = rules['transform']
+        else:
+            # for backwards compatibility while I play
+            xform = rules
+    
         for item in self.labels:
-            if item in rules:
+            if item in xform:
                 # forgive me for this!
                 #exec("lmb = " + rules[item])
-                lmb = eval(rules[item])
+                lmb = eval(xform[item])
                 new_labels[item] = lmb(self.labels[item])
+       
+            #print("ITREM %s" % item) 
+            if 'excise' in rules and item in rules['excise']:
+                lmb = eval(rules['excise'][item])
+                if lmb(self.labels[item]):
+                    new_labels = {} 
+
         new_node = CallGraph(new_labels)
         for c in self.children:
             new_node.add_child(c.transform(rules))
@@ -96,7 +107,7 @@ class CallGraph():
             working.append(child)
 
         for child in working:
-            if child.equiv(self, rule) or child.label(rule) == "":
+            if child.label(rule) == "" or child.equiv(self, rule):
                 for c in child.children:
                     working.append(c)
             else:
