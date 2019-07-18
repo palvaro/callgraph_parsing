@@ -10,8 +10,6 @@ class JaegerParser():
     
         self.map = {}
        
-
-
     def process(self):
         data = self.jsn['data']
         assert(len(data) == 1)
@@ -21,12 +19,11 @@ class JaegerParser():
             processes[process] = data[0]['processes'][process]
 
         for span in data[0]['spans']:
-            #print span
             labels = {}
             for key in span:
-                #print "key " + key
                 t = type(span[key])
-                if t in (str, int, float, unicode):
+                print("type " + str(t))
+                if t in (str, int, float):
                     labels[key] = span[key]
             for tag in span['tags']:
                 labels[tag['key']] = tag['value']
@@ -38,17 +35,14 @@ class JaegerParser():
 
             labels['serviceName'] = processes[span['processID']]['serviceName']
             for tag in processes[span['processID']]['tags']:
-                #print "TAG is " + tag
                 labels['process-' + tag['key']] = tag['value']
 
             node = CallGraph(labels)
             self.map[span['spanID']] = node
 
         for key in self.map:
-            print "key *" + key + "*"
             if 'parent_span' in self.map[key].labels:
-                parent_key = self.map[key].labels['parent_span'].encode('ascii', 'ignore')
-                print "parent key is *" + parent_key + "*"
+                parent_key = self.map[key].labels['parent_span']#.encode('ascii', 'ignore')
                 parent = self.map[parent_key]
                 parent.add_child(self.map[key])
             else:

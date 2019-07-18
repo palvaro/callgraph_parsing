@@ -16,18 +16,15 @@ class CallGraph():
         st = ''
         for k in self.labels:
             if k in rule or rule == []:
-                print "DO EET " + k + " on " + str(rule)
                 st += k + '=' + str(self.labels[k]) + ","
 
 
         return st
 
     def formula(self, rule=[]):
-        print "RULE is " + str(rule)
         timeline = []
         names = map(lambda x: x.name(rule), self.children)
         for item in self.children:
-            print "item " + str(item) + " LABELS be " + str(item.labels)
             timeline.append((item, "START", item.labels['startTime']))
             timeline.append((item, "END", item.labels['startTime'] + item.labels['duration']))
 
@@ -56,18 +53,18 @@ class CallGraph():
     def todot(self, dot, rule=[]):
         dot.node(self.name(rule), self.label(rule))
         for c in self.children:
-            print "c is " + str(c)
             c.todot(dot, rule)
             dot.edge(self.name(rule), c.name(rule))
 
     def transform(self, rules):
         new_labels = {}
-        print "ROOLS " + str(rules)
         for item in self.labels:
             if item in rules:
-                print "lam"
                 # forgive me for this!
-                exec("lmb = " + rules[item])
+                #exec("lmb = " + rules[item])
+                print("lmb " + rules[item])
+                lmb = exec(rules[item])
+                print("LMB " + str(lmb))
                 new_labels[item] = lmb(self.labels[item])
         new_node = CallGraph(new_labels)
         for c in self.children:
@@ -98,9 +95,7 @@ class CallGraph():
 
         for child in working:
             if child.equiv(self, rule):
-                print "samesies"
                 for c in child.children:
-                    print "OOO"
                     working.append(c)
             else:
                 new_node.add_child(child.collapse(rule)) 
