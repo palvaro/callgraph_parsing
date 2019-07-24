@@ -1,10 +1,15 @@
+import re
 class CallGraph():
     def __init__(self, labels={}):
         self.labels = labels
         self.children = set()
+        self.parents = set()
 
     def add_child(self, child):
         self.children.add(child)
+
+    def add_parent(self, parent):
+        self.parents.add(parent)
 
     def name(self, rule):
         #return str(self.labels)
