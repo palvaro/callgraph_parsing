@@ -13,7 +13,6 @@ class CalTrace:
     def __init__(self, ip_file:str):
         self.svc_list = {}
         self.parent_list = {}
-        self.svcs = {}
         self.roots = []
         self.trace_file = ip_file
         self.json_data = self.process()
@@ -23,21 +22,6 @@ class CalTrace:
         self.json_data = json.load(f)
         f.close()
         self.parse_data()
-
-    def get_uniq_svc(self, svc):
-        """
-        Response data is structured so that single pool has multiple JSON
-        dictionaries. Select one for each pool and stick with it.
-        """
-        if svc.labels['pool'] not in self.svcs:
-            self.svcs[svc.labels['pool']] = svc
-        else:
-            pool = svc.labels['pool'] 
-            if svc.labels['startTime'] < self.svcs[pool].labels['startTime']:
-                self.svcs[pool].labels['startTime'] = svc.labels['startTime']
-            self.svcs[pool].labels['duration'] += svc.labels['duration']
-            svc = self.svcs[pool]
-        return svc
 
     def dont_process(self, svc, parent):
         """
@@ -54,10 +38,12 @@ class CalTrace:
         return svc
 
     def populate_roots(self):
-        for pool in sorted(self.svcs.keys()):
-            svc = self.svcs[pool]
+        print(len(self.svc_list.keys()))
+        for uniq_id in sorted(self.svc_list.keys()):
+            svc = self.svc_list[uniq_id]
             if not svc.parents:
                 self.roots.append(svc)
+        print(len(self.roots))
 
     def create_tree(self):
         keys = list(self.svc_list.keys())
@@ -65,7 +51,6 @@ class CalTrace:
             cur_svc = self.svc_list[uniq_id]
             parent_id = self.parent_list[uniq_id]
             if parent_id not in self.svc_list:
-                cur_svc = self.get_uniq_svc(cur_svc)
                 logger.debug("Poolname is %s, %s not present", \
                         cur_svc.labels['pool'], parent_id)
                 continue
@@ -73,9 +58,6 @@ class CalTrace:
             parent = self.svc_list[parent_id]
             if self.dont_process(cur_svc, parent):
                 continue
-
-            cur_svc = self.get_uniq_svc(cur_svc)
-            parent = self.get_uniq_svc(parent)
 
             parent.add_child(cur_svc)
             cur_svc.add_parent(parent)
@@ -110,5 +92,4 @@ class CalTrace:
             parent_id = labels['parentId']
             self.svc_list[uniq_id] = svc
             self.parent_list[uniq_id] = parent_id
-
         self.create_tree()

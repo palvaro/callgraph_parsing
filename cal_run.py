@@ -10,14 +10,14 @@ from graphviz import Digraph
 #}
 
 
-def draw_graph(tree, name, rule):
+def draw_graph(trees, name, rule):
     dot = Digraph(name)
-    dotfile = tree.todot(dot, rule)
+    for tree in trees:
+        tree.todot(dot, rule)
     dot.render(name, view=True)
 
 
 p = CalTrace("viewitem.json")
-p.process()
 
 crule = ['pool']
 
@@ -31,9 +31,10 @@ rules_raw = {
         'pool' : 'lambda x : re.search("elasticsearch", x, re.IGNORECASE)'
     }
 }
+new_roots = []
 for root in p.roots:
-    draw_graph(root.transform(rules_raw), "raw", [])
-
+    new_roots.append(root.transform(rules_raw))
+draw_graph(new_roots, "raw", [])
 
 
 #  project down to serviceName, classic LDFI style
@@ -45,12 +46,16 @@ rules1 = {
         'pool' : 'lambda x : re.search("elasticsearch", x, re.IGNORECASE)'
     }
 }
+new_roots = []
 for root in p.roots:
-    draw_graph(root.transform(rules1), "ldfi-raw", crule)
+    new_roots.append(root.transform(rules1))
+draw_graph(new_roots, "ldfi-raw", crule)
 
 # step 2: collapse adjacent nodes with identical labels
+new_roots = []
 for root in p.roots:
-    draw_graph(root.transform(rules1).collapse(), "ldfi-clean", crule)
+    new_roots.append(root.transform(rules1).collapse())
+draw_graph(new_roots, "ldfi-clean", crule)
 
 # remember timing information as well
 rules2 = {
@@ -63,12 +68,16 @@ rules2 = {
         'pool' : 'lambda x : re.search("elasticsearch", x, re.IGNORECASE)'
     }
 }
+new_roots = []
 for root in p.roots:
-    draw_graph(root.transform(rules2).collapse(), "ldfi2-raw", [])
+    new_roots.append(root.transform(rules2).collapse())
+draw_graph(new_roots, "ldfi2-raw", [])
 
 # but 'forget' timing information during collapse, projecting down to service name.
+new_roots = []
 for root in p.roots:
-    draw_graph(root.transform(rules2).collapse(["pool"]), "ldfi2-clean", [])
+    new_roots.append(root.transform(rules2).collapse(["pool"]))
+draw_graph(new_roots, "ldfi2-clean", [])
 
 
 
