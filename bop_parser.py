@@ -54,7 +54,7 @@ class Syscalls():
 
 
 
-
+# fixme: 1st arg not used
 def event_to_syscall(calltable, syscalls, events, thread, id):
    l = events[thread][id]
    sys = syscalls[int(l["syscall_internal_id"])]
@@ -64,6 +64,19 @@ def thread_to_commandline(threads, processes, thread):
     t = threads[thread]
     p = processes[int(t["process_internal_id"])]
     return p["command_line"] + "(" + t["process_internal_id"] + ")"
+
+def syscall_to_ip_port(sockops, peerings, syscall):
+    # this won't be fast...
+    for op in sockops:
+        if op['syscall_uuid'] == syscall['internal_uuid']:
+            for p in peerings:
+                if p['type'] == 'addr' and p['sock_iid'] == op['socket_internal_id']:
+                    #return p['ip'] + ':' + p['port']
+                    # for now...
+                    return p['port']
+
+    return 'None'
+    
 
 
 
@@ -160,73 +173,73 @@ with open(sys.argv[1], "r") as file:
 #print "OK peerings is %s" % peerings
 
 # write a dot bitch
+#dot = Digraph("lampo", order="nodesfirst")
 dot = Digraph("lampo")
 
-dot.sub
+dot.graph_attr['outputorder'] = 'nodesfirst'
+
+
+
 
 
 frontier = {}
-
-for s, c0, c1 in rendezvous:
-    tgt_call = event_to_syscall(calltable, syscalls, events, c1, c0)
-    callname = calltable.resolve(int(tgt_call["syscall_number"]))
-    #print("t is " + callname + " :: " + str(tgt_call) + " socket " + str(sockops.get(int(tgt_call["internal_uuid"]), "NONE")))
-    src_call = event_to_syscall(calltable, syscalls, events, int(s['parent_thread_id']), int(s['parent_thread_event_id']))
-    ident1 = (tgt_call["issuing_thread_tid"] , c0)
-    ident2 = (src_call["issuing_thread_tid"], s['parent_thread_event_id'])
-    istr = ','.join(map(str, ident1))
-    istr2 = ','.join(ident2)
-    
-
-    
+last_message = {}
 
 for s, c0, c1 in rendezvous:
     # the target event
     tgt_call = event_to_syscall(calltable, syscalls, events, c1, c0)
     callname = calltable.resolve(int(tgt_call["syscall_number"]))  
-    #print("t is " + callname + " :: " + str(tgt_call) + " socket " + str(sockops.get(int(tgt_call["internal_uuid"]), "NONE")))
     src_call = event_to_syscall(calltable, syscalls, events, int(s['parent_thread_id']), int(s['parent_thread_event_id']))
-
     callname2 = calltable.resolve(int(src_call["syscall_number"]))  
-    #print "s is " + callname + " :: " + str(src_call) + " socket " + str(sockops.get(int(src_call["internal_uuid"]), "NONE"))
-
-    
-
     
     t = threads[int(s['parent_thread_id'])]
-    #print "lookup " + t["process_internal_id"]
-    #print "OROC " + str(processes)
     p = processes[int(t["process_internal_id"])]
-    
     src_cmd = p["command_line"]
-    #print "SRC " + src_cmd
+    tgt_ip_port = syscall_to_ip_port(sockops, peerings, tgt_call)
+    src_ip_port = syscall_to_ip_port(sockops, peerings, src_call)
 
-    ident1 = (tgt_call["issuing_thread_tid"] , c0)
-    ident2 = (src_call["issuing_thread_tid"], s['parent_thread_event_id'])
-
+    ident1 = (tgt_call["issuing_thread_tid"] , callname, c0, tgt_ip_port)
+    ident2 = (src_call["issuing_thread_tid"], callname2, s['parent_thread_event_id'], src_ip_port)
 
     istr = ','.join(map(str, ident1))
     istr2 = ','.join(ident2)
 
-    dot.node(istr, label=tgt_call["issuing_thread_tid"] + " : " + callname)
-    dot.node(istr2,label=src_call["issuing_thread_tid"] + " : " + callname2)
+    tag = (src_call["issuing_thread_tid"], callname)
+    if tgt_call["issuing_thread_tid"] not in last_message or last_message[tgt_call["issuing_thread_tid"]] != tag:
+    #if True:
+        if tgt_call["issuing_thread_tid"] not in frontier:
+            frontier[tgt_call["issuing_thread_tid"]] = []
+        if src_call["issuing_thread_tid"] not in frontier:
+            frontier[src_call["issuing_thread_tid"]] = []
+        frontier[tgt_call["issuing_thread_tid"]].append(istr)
+        frontier[src_call["issuing_thread_tid"]].append(istr2)
+        #dot.node(istr, label=tgt_call["issuing_thread_tid"] + " : " + callname)
+        #dot.node(istr2,label=src_call["issuing_thread_tid"] + " : " + callname2)
+        dot.edge(istr2, istr, weight='0')
 
-    if src_call["issuing_thread_tid"] in frontier:
-        dot.edge(frontier[src_call["issuing_thread_tid"]], istr2)
-    frontier[src_call["issuing_thread_tid"]] = istr2
+    last_message[tgt_call["issuing_thread_tid"]] = tag
 
-    if tgt_call["issuing_thread_tid"] in frontier:
-        dot.edge(frontier[tgt_call["issuing_thread_tid"]], istr)
-    frontier[tgt_call["issuing_thread_tid"]] = istr
+    #print("src call is %s" % src_call)
+    #print("istr %s, istr2 %s" % (istr, istr2))
+    #print(src_call["issuing_thread_tid"] + " : " + callname2 + " ---> " + tgt_call["issuing_thread_tid"] + " : " + callname)
 
-    dot.edge(istr2, istr)
-    print("src call is %s" % src_call)
 
-    print("istr %s, istr2 %s" % (istr, istr2))
-    print(src_call["issuing_thread_tid"] + " : " + callname2 + " ---> " + tgt_call["issuing_thread_tid"] + " : " + callname)
+for idx,thread in enumerate(frontier):
+    nm = "cluster_" + str(idx)
+    #print("NAME is %s" % nm)
+    with dot.subgraph(name = nm) as c:
+        last = None
+        for event in sorted(frontier[thread], key=lambda x: int(x.split(',')[2])):
+            #print("event %s" % event)
+            if last is not None:
+                # go back and figure out the source of this duplication for write calls
+                if last != event:   
+                    c.edge(last, event, weight='2')
+            last = event
 
 
 dot.render("foo")
+
 
 
 
