@@ -4,10 +4,10 @@ from graphviz import Digraph
 
 
 
-#rules = {
-#    'operationName' : "lambda x : '' if x.startswith('async') or x.startswith('/istio') or x.startswith('kubernetes') else x",
-#    'processID' : 'lambda x : x'
-#}
+rules_pid = {
+    'operationName' : "lambda x : '' if x.startswith('async') or x.startswith('/istio') or x.startswith('kubernetes') else x",
+    'processID' : 'lambda x : x'
+}
 
 
 def draw_graph(tree, name, rule):
@@ -32,7 +32,7 @@ rules_raw = {
         'serviceName' : 'lambda x : x.startswith("istio-mixer")'
     }
 }
-draw_graph(p.root.transform(rules_raw), "raw", [])
+draw_graph(p.root.transform(rules_pid).collapse(), "raw", [])
 
 
 

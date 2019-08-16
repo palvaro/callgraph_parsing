@@ -9,8 +9,10 @@ class CalParser():
         fp.close()
         self.map = {}
         self.roots = []
+        self.root = None
        
     def process(self):
+        missing_parents = {}
         data = self.jsn['responseData']
 
         for item in data:
@@ -21,7 +23,7 @@ class CalParser():
                     labels[key] = item[key]
                    
             for key in item['dimensions']: 
-                print("%s = %s" % (key, item['dimensions'][key]))
+                #print("%s = %s" % (key, item['dimensions'][key]))
                 labels[key] = item['dimensions'][key]
 
             node = CallGraph(labels)
@@ -32,19 +34,27 @@ class CalParser():
 
         for key in self.map:
             if 'parentId' in self.map[key].labels:
-                print("parent is %s" % self.map[key].labels['parentId'])
+                #print("parent is %s" % self.map[key].labels['parentId'])
                 parent_key = self.map[key].labels['parentId']#.encode('ascii', 'ignore')
 
-
-                if parent_key in self.map:
+                if parent_key == 'null':
+                    self.root = self.map[key]
+                elif parent_key in self.map:
                     parent = self.map[parent_key]
                     parent.add_child(self.map[key])
                 else:
+                    if parent_key in missing_parents:
+                        missing_parents[parent_key] += 1
+                    else:
+                        missing_parents[parent_key] = 1
                     self.roots.append(self.map[key])
             else:
-                print("there is a root")
+                #print("there is a root")
                 self.roots.append(self.map[key])
 
+        for p in missing_parents:
+            print("missing parent: %s.  count=%d" % (p, missing_parents[p]))
 
-        return self.roots
+
+        return self.root
 

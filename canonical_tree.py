@@ -26,6 +26,20 @@ class CallGraph():
 
         return st
 
+    def nodes(self):
+        cnt = 1
+        for c in self.children:
+            cnt += c.nodes()
+        return cnt
+
+    def depth(self):
+        max = 0
+        for c in self.children:
+            if c.depth() > max:
+                max = c.depth()
+        return max + 1
+        
+
     def formula(self, rule=[]):
         timeline = []
         names = list(map(lambda x: x.name(rule), self.children))
