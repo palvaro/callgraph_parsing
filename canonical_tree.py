@@ -23,8 +23,20 @@ class CallGraph():
             if k in rule or rule == []:
                 st += k + '=' + str(self.labels[k]) + ","
 
-
         return st
+
+    def label_values(self):
+        # return a map of label => [ values ]
+        lbls = self.labels.copy()
+        for c in self.children:
+            ch = c.label_values()
+            for k in ch:
+                if k not in lbls:
+                    lbls[k] = ch[k]
+                else:
+                    lbls[k] = lbls[k] + ch[k]
+
+        return lbls
 
     def formula(self, rule=[]):
         timeline = []

@@ -73,3 +73,10 @@ draw_graph(p.root.transform(rules2).collapse(["serviceName"]), "ldfi2-clean", []
 collapsed = p.root.transform(rules2).collapse(crule)
 f = collapsed.formula(crule)
 print("FORM " + str(f))
+
+
+lbls = p.root.label_values()
+for k in lbls:
+    print(k)
+    for v in lbls[k]:
+        print("\t %s" % v)
