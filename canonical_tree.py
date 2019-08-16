@@ -40,7 +40,10 @@ class CallGraph():
         
     def label_values(self):
         # return a map of label => [ values ]
-        lbls = self.labels.copy()
+        #lbls = self.labels.copy()   
+        lbls = {}
+        for l in self.labels:
+            lbls[l] = [ self.labels[l] ]
         for c in self.children:
             ch = c.label_values()
             for k in ch:
@@ -88,7 +91,7 @@ class CallGraph():
             c.todot(dot, rule)
             dot.edge(self.name(rule), c.name(rule))
 
-    def transform(self, rules):
+    def transform(self, rules, totality={}):
         new_labels = {}
         if 'transform' in rules and 'excise' in rules:
             xform = rules['transform']
@@ -100,18 +103,22 @@ class CallGraph():
             if item in xform:
                 # forgive me for this!
                 #exec("lmb = " + rules[item])
-                lmb = eval(xform[item])
-                new_labels[item] = lmb(self.labels[item])
+                #lmb = eval(xform[item])
+                #new_labels[item] = lmb(self.labels[item], totality.get(item, []))
+                if item not in totality:
+                    print("%s is missing from map!" % item)
+                new_labels[item] = xform[item](self.labels[item], totality.get(item, []))
        
             #print("ITREM %s" % item) 
             if 'excise' in rules and item in rules['excise']:
-                lmb = eval(rules['excise'][item])
-                if lmb(self.labels[item]):
+                #lmb = eval(rules['excise'][item])
+                #if lmb(self.labels[item]):
+                if rules['excise'][item](self.labels[item]):
                     new_labels = {} 
 
         new_node = CallGraph(new_labels)
         for c in self.children:
-            new_node.add_child(c.transform(rules))
+            new_node.add_child(c.transform(rules, totality))
 
         return new_node
 

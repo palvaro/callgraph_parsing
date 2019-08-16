@@ -2,6 +2,8 @@ import re, sys, os
 import sqlite3
 import struct, socket, json
 from graphviz import Digraph
+from canonical_tree import CallGraph
+
 
 
 syscall_re = re.compile("SYSCALL (?P<internal_uuid>[0-9-]+) (?P<issuing_thread_tid>[0-9-]+) (?P<issuing_process_pid>[0-9-]+) (?P<local_id>[0-9-]+) (?P<syscall_number>[0-9-]+) (?P<arg0>[0-9-]+) (?P<arg1>[0-9-]+) (?P<arg2>[0-9-]+) (?P<arg3>[0-9-]+) (?P<arg4>[0-9-]+) (?P<arg5>[0-9-]+) (?P<retval>[0-9-]+) (?P<was_successful>[0-9-]+)")
@@ -173,10 +175,12 @@ with open(sys.argv[1], "r") as file:
 #print "OK peerings is %s" % peerings
 
 # write a dot bitch
-#dot = Digraph("lampo", order="nodesfirst")
+#dot = Digraph("lampo", order="nodesfirst", ra)
 dot = Digraph("lampo")
 
 dot.graph_attr['outputorder'] = 'nodesfirst'
+dot.graph_attr['rankdir'] = 'TD'
+dot.graph_attr['splines'] = 'line'
 
 
 
@@ -185,6 +189,8 @@ dot.graph_attr['outputorder'] = 'nodesfirst'
 frontier = {}
 last_message = {}
 
+cg_nodes = {}
+
 for s, c0, c1 in rendezvous:
     # the target event
     tgt_call = event_to_syscall(calltable, syscalls, events, c1, c0)
@@ -192,55 +198,123 @@ for s, c0, c1 in rendezvous:
     src_call = event_to_syscall(calltable, syscalls, events, int(s['parent_thread_id']), int(s['parent_thread_event_id']))
     callname2 = calltable.resolve(int(src_call["syscall_number"]))  
     
-    t = threads[int(s['parent_thread_id'])]
-    p = processes[int(t["process_internal_id"])]
-    src_cmd = p["command_line"]
+    src_cmd = thread_to_commandline(threads, processes, int(s['parent_thread_id']))
+    tgt_cmd = thread_to_commandline(threads, processes, c1)
+
     tgt_ip_port = syscall_to_ip_port(sockops, peerings, tgt_call)
     src_ip_port = syscall_to_ip_port(sockops, peerings, src_call)
 
-    ident1 = (tgt_call["issuing_thread_tid"] , callname, c0, tgt_ip_port)
-    ident2 = (src_call["issuing_thread_tid"], callname2, s['parent_thread_event_id'], src_ip_port)
+    ident1 = (tgt_call["issuing_thread_tid"] , callname, c0, tgt_ip_port,src_cmd)
+    ident2 = (src_call["issuing_thread_tid"], callname2, s['parent_thread_event_id'], src_ip_port,tgt_cmd)
+
 
     istr = ','.join(map(str, ident1))
     istr2 = ','.join(ident2)
 
-    tag = (src_call["issuing_thread_tid"], callname)
-    if tgt_call["issuing_thread_tid"] not in last_message or last_message[tgt_call["issuing_thread_tid"]] != tag:
+
+    if istr not in cg_nodes:
+        labels = tgt_call.copy()
+        labels['command'] = callname2
+        labels['ip_port'] = tgt_ip_port
+        cg_nodes[istr] = CallGraph(labels)
+
+    if istr2 not in cg_nodes:
+        labels = src_call.copy()
+        labels['command'] = callname
+        labels['ip_port'] = src_ip_port
+        cg_nodes[istr2] = CallGraph(labels)
+
+    cg_nodes[istr2].add_child(cg_nodes[istr])
+
+    #stag = src_call["issuing_thread_tid"]
+    #ttag = tgt_call["issuing_thread_tid"]
+    stag = src_ip_port
+    ttag = tgt_ip_port
+
+    tag = (stag, callname)
+    if ttag not in last_message or last_message[ttag] != tag:
     #if True:
-        if tgt_call["issuing_thread_tid"] not in frontier:
-            frontier[tgt_call["issuing_thread_tid"]] = []
-        if src_call["issuing_thread_tid"] not in frontier:
-            frontier[src_call["issuing_thread_tid"]] = []
-        frontier[tgt_call["issuing_thread_tid"]].append(istr)
-        frontier[src_call["issuing_thread_tid"]].append(istr2)
+        if ttag not in frontier:
+            frontier[ttag] = {}
+        if stag not in frontier:
+            frontier[stag] = {}
+        #frontier[ttag].append(istr)
+        #frontier[stag].append(istr2)
+
+        st = src_call["issuing_thread_tid"]
+        tt = tgt_call["issuing_thread_tid"]
+        
+        if tt not in frontier[ttag]:
+            frontier[ttag][tt] = []
+        if st not in frontier[stag]:
+            frontier[stag][st] = []
+
+        frontier[ttag][tt].append(istr)
+        frontier[stag][st].append(istr2)
+        
+
         #dot.node(istr, label=tgt_call["issuing_thread_tid"] + " : " + callname)
         #dot.node(istr2,label=src_call["issuing_thread_tid"] + " : " + callname2)
-        dot.edge(istr2, istr, weight='0')
+        dot.edge(istr2, istr, weight='1')
 
-    last_message[tgt_call["issuing_thread_tid"]] = tag
+    last_message[ttag] = tag
 
     #print("src call is %s" % src_call)
     #print("istr %s, istr2 %s" % (istr, istr2))
     #print(src_call["issuing_thread_tid"] + " : " + callname2 + " ---> " + tgt_call["issuing_thread_tid"] + " : " + callname)
 
 
-for idx,thread in enumerate(frontier):
-    nm = "cluster_" + str(idx)
+for idx,port in enumerate(frontier):
+    nm = "cluster_" + str(port)
     #print("NAME is %s" % nm)
     with dot.subgraph(name = nm) as c:
-        last = None
-        for event in sorted(frontier[thread], key=lambda x: int(x.split(',')[2])):
-            #print("event %s" % event)
-            if last is not None:
-                # go back and figure out the source of this duplication for write calls
-                if last != event:   
-                    c.edge(last, event, weight='2')
-            last = event
+        for thread in frontier[port]:
+            snm = "cluster_" + str(thread)
+            with c.subgraph(name=snm) as inner:
+                last = None
+                for event in sorted(frontier[port][thread], key=lambda x: int(x.split(',')[2])):
+                    #print("event %s" % event)
+                    if last is not None:
+                        # go back and figure out the source of this duplication for write calls
+                        if last != event:   
+                            inner.edge(last, event, weight='2')
+                            cg_nodes[last].add_child(cg_nodes[event])   
+                            print("HABBY")
+                    last = event
 
 
-dot.render("foo")
+dot.render("foo2")
 
 
 
 
+# this is some wild imperative shit
+possible_roots = []
+for node in cg_nodes:
+    possible_roots.append(cg_nodes[node])
 
+for node in cg_nodes:
+    print("NODE %s val %s" % (node, cg_nodes[node]))
+    for child in cg_nodes[node].children:
+        print("DELETE %s" % child)
+        if child in possible_roots:
+            possible_roots.remove(child)
+        else:
+            print("missing child: %s" % child)
+
+
+phony_root = CallGraph({'name': 'phony root'}) 
+for root in possible_roots:
+    print("ROOT %s" % root)
+    phony_root.add_child(root)
+
+
+rules = {
+    'command': 'lambda x: x',
+    'ip_port': 'lambda x: x'
+}
+
+new_root = phony_root.transform(rules).collapse()
+dt = Digraph()
+new_root.todot(dt)
+dt.render("baR")
