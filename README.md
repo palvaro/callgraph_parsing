@@ -1,5 +1,7 @@
 # callgraph simplification
 
+Ellie test...!
+
 The CallGraph class is a generic representation of a (tree-shaped, at least for now) trace.  Nodes are bags of flat labels,
 and an edge from node A to node B indicates that depends causally on B.
 
