@@ -2,7 +2,7 @@ import re, sys, os
 import sqlite3
 import struct, socket, json
 from graphviz import Digraph
-from canonical_tree import CallGraph, index_of
+from canonical_tree import CallGraph, index_of, index_of_memo
 
 
 
@@ -308,18 +308,20 @@ for root in possible_roots:
     #print("ROOT %s" % root)
     phony_root.add_child(root)
 
+print("getting totality")
 lbl_vals = phony_root.label_values()
+print("done")
 
 
 rules = {
     'command': lambda x,y: x,
     'ip_port': lambda x,y: x,
-    'internal_uuid': index_of,
-    'local_id': index_of
+    'internal_uuid': index_of_memo,
+    'local_id': index_of_memo
 }
 
 new_root = phony_root.transform(rules, lbl_vals).collapse()
-dt = Digraph()
+dt = Digraph(strict=True)
 new_root.todot(dt)
 dt.render("baR")
 

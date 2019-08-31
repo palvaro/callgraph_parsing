@@ -1,5 +1,17 @@
 import re
 
+# need to implement this thing as a memoizing function or we are done.
+
+sorts = {}
+
+def index_of_memo(x, y):
+    if id(y) not in sorts:
+        sorts[id(y)] = {}
+        for idx, val in enumerate(sorted(map(lambda q: int(q), y))):
+            # N.B. again, assuming unique and picking a different winner!
+            sorts[id(y)][val] = idx
+    return sorts[id(y)][int(x)]
+
 def index_of(x, y):
     #print("IN INDEXOF with %d items" % len(y))
     # decidedly not fast!  pls optimize
