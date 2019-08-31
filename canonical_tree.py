@@ -1,4 +1,14 @@
 import re
+
+def index_of(x, y):
+    #print("IN INDEXOF with %d items" % len(y))
+    # decidedly not fast!  pls optimize
+    for idx, val in enumerate(sorted(map(lambda q: int(q), y))):
+        # assumes values to be unique!! ono
+        #print("compare %s to %s" % (val, x))
+        if val == int(x):
+            return idx
+
 class CallGraph():
     def __init__(self, labels={}):
         self.labels = labels
@@ -106,7 +116,7 @@ class CallGraph():
                 #lmb = eval(xform[item])
                 #new_labels[item] = lmb(self.labels[item], totality.get(item, []))
                 if item not in totality:
-                    print("%s is missing from map!" % item)
+                    print("%s is missing from map with keys %s!" % (item, totality.keys()))
                 new_labels[item] = xform[item](self.labels[item], totality.get(item, []))
        
             #print("ITREM %s" % item) 

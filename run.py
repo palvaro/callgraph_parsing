@@ -1,16 +1,10 @@
 from jaeger_parser import JaegerParser
 from graphviz import Digraph
 import sys
+from canonical_tree import index_of
 
 
 
-def index_of(x, y):
-    print("IN INDEXOF with %d items" % len(y))
-    for idx, val in enumerate(sorted(map(lambda q: int(q), y))):
-        # assumes values to be unique!! ono
-        print("compare %s to %s" % (val, x))
-        if val == int(x):
-            return idx
 
 rules_pid = {
     #'operationName' : "lambda x, y : '' if x.startswith('async') or x.startswith('/istio') or x.startswith('kubernetes') else x",

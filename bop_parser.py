@@ -2,7 +2,7 @@ import re, sys, os
 import sqlite3
 import struct, socket, json
 from graphviz import Digraph
-from canonical_tree import CallGraph
+from canonical_tree import CallGraph, index_of
 
 
 
@@ -175,7 +175,7 @@ with open(sys.argv[1], "r") as file:
 #print "OK peerings is %s" % peerings
 
 # write a dot bitch
-#dot = Digraph("lampo", order="nodesfirst", ra)
+#dot = Digraph("lampo", order="nodesfirst", ra, strict="true")
 dot = Digraph("lampo")
 
 dot.graph_attr['outputorder'] = 'nodesfirst'
@@ -279,7 +279,6 @@ for idx,port in enumerate(frontier):
                         if last != event:   
                             inner.edge(last, event, weight='2')
                             cg_nodes[last].add_child(cg_nodes[event])   
-                            print("HABBY")
                     last = event
 
 
@@ -291,12 +290,13 @@ dot.render("foo2")
 # this is some wild imperative shit
 possible_roots = []
 for node in cg_nodes:
+    print("LABELS %s", cg_nodes[node].labels)
     possible_roots.append(cg_nodes[node])
 
 for node in cg_nodes:
-    print("NODE %s val %s" % (node, cg_nodes[node]))
+    #print("NODE %s val %s" % (node, cg_nodes[node]))
     for child in cg_nodes[node].children:
-        print("DELETE %s" % child)
+        #print("DELETE %s" % child)
         if child in possible_roots:
             possible_roots.remove(child)
         else:
@@ -305,16 +305,21 @@ for node in cg_nodes:
 
 phony_root = CallGraph({'name': 'phony root'}) 
 for root in possible_roots:
-    print("ROOT %s" % root)
+    #print("ROOT %s" % root)
     phony_root.add_child(root)
+
+lbl_vals = phony_root.label_values()
 
 
 rules = {
-    'command': 'lambda x: x',
-    'ip_port': 'lambda x: x'
+    'command': lambda x,y: x,
+    'ip_port': lambda x,y: x,
+    'internal_uuid': index_of,
+    'local_id': index_of
 }
 
-new_root = phony_root.transform(rules).collapse()
+new_root = phony_root.transform(rules, lbl_vals).collapse()
 dt = Digraph()
 new_root.todot(dt)
 dt.render("baR")
+
