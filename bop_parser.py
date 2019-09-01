@@ -174,16 +174,27 @@ with open(sys.argv[1], "r") as file:
 
 #print "OK peerings is %s" % peerings
 
-# write a dot bitch
+
+# N.B.  in the previous version of this script, we imported all of the relations we
+# collected above into a sqlite database and issued queries against them.
+# in this version we do two things:
+# 1) plot an idealized visualization that take into account bop-specific domain knowledge, and
+# 2) tranform the bop graph into the canonical format so that we can perform abstractions
+# and visualizations that are independent of this domain
+
+# unfortunately the existing implementation of (2) falls short of this goal,
+# as it encodes the bias of (1).  Next step will be, instead of driving from "rendezvous"
+# (graph nodes with two parents; ergo message receive events) encoding the entire raw DAG 
+# and showing that we can collapse to the same abstract graph, hence *discovering* these 
+# important events.
+
+# write a dot
 #dot = Digraph("lampo", order="nodesfirst", ra, strict="true")
 dot = Digraph("lampo")
 
 dot.graph_attr['outputorder'] = 'nodesfirst'
 dot.graph_attr['rankdir'] = 'TD'
 dot.graph_attr['splines'] = 'line'
-
-
-
 
 
 frontier = {}
