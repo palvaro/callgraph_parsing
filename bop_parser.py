@@ -60,6 +60,7 @@ class Syscalls():
 def event_to_syscall(calltable, syscalls, events, thread, id):
    l = events[thread][id]
    sys = syscalls[int(l["syscall_internal_id"])]
+   sys["is_entry"] = l["was_syscall_entry"]
    return sys
 
 def thread_to_commandline(threads, processes, thread):
@@ -325,10 +326,12 @@ print("done")
 
 
 rules = {
-    'command': lambda x,y: x,
-    'ip_port': lambda x,y: x,
+    'command': lambda x,y,z: x,
+    'ip_port': lambda x,y,z: x,
     'internal_uuid': index_of_memo,
-    'local_id': index_of_memo
+    'local_id': index_of_memo,
+    #'is_entry': lambda x,y,z: x
+    'is_entry': lambda x,y,z: x if z['command'] in ['connect', 'accept'] else False
 }
 
 new_root = phony_root.transform(rules, lbl_vals).collapse()

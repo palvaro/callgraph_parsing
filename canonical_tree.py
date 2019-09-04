@@ -4,7 +4,7 @@ import re
 
 sorts = {}
 
-def index_of_memo(x, y):
+def index_of_memo(x, y, z):
     if id(y) not in sorts:
         sorts[id(y)] = {}
         for idx, val in enumerate(sorted(map(lambda q: int(q), y))):
@@ -12,7 +12,7 @@ def index_of_memo(x, y):
             sorts[id(y)][val] = idx
     return sorts[id(y)][int(x)]
 
-def index_of(x, y):
+def index_of(x, y, z):
     #print("IN INDEXOF with %d items" % len(y))
     # decidedly not fast!  pls optimize
     for idx, val in enumerate(sorted(map(lambda q: int(q), y))):
@@ -129,7 +129,7 @@ class CallGraph():
                 #new_labels[item] = lmb(self.labels[item], totality.get(item, []))
                 if item not in totality:
                     print("%s is missing from map with keys %s!" % (item, totality.keys()))
-                new_labels[item] = xform[item](self.labels[item], totality.get(item, []))
+                new_labels[item] = xform[item](self.labels[item], totality.get(item, []), self.labels)
        
             #print("ITREM %s" % item) 
             if 'excise' in rules and item in rules['excise']:
