@@ -69,6 +69,7 @@ def thread_to_commandline(threads, processes, thread):
     return p["command_line"] + "(" + t["process_internal_id"] + ")"
 
 def syscall_to_ip_port(sockops, peerings, syscall):
+    print("CALL:: looking up %s" % syscall['internal_uuid'])
     # this won't be fast...
     for op in sockops:
         if op['syscall_uuid'] == syscall['internal_uuid']:
@@ -203,47 +204,103 @@ last_message = {}
 
 cg_nodes = {}
 
+def get_lbl(thread, event):
+    ithread = int(thread)
+    ievent = int(event)
+    call = event_to_syscall(calltable, syscalls, events, ithread, ievent)
+    callname = calltable.resolve(int(call["syscall_number"]))
+    cmd = thread_to_commandline(threads, processes, ithread)
+    ip_port = syscall_to_ip_port(sockops, peerings, call)
+    print("CALL is %s, port %s event %s" % (call, ip_port, event))
+    ident = ( call['issuing_thread_tid'], callname, event, ip_port, cmd )
+    print("CALL IDENT %s", ident)
+    istr = ','.join(ident)
+    return (istr, call, callname, cmd, ip_port)
+
+phony_root = CallGraph({'name': 'phony root'}) 
+# complete the graph!
+for tid in events:
+    #print("I got %s" % type(events[tid]))
+    #for i in events[tid]:
+    #    print("OH MY %s" % i)
+
+    curr = None
+    for idx, val in enumerate(sorted(events[tid], key = lambda x: int(x['internal_perthread_id']))):
+        (lbl, call, callname, cmd, ip_port) = get_lbl(tid, val['internal_perthread_id'])
+        print("VAL %s label %s" % (val, lbl))
+        if lbl not in cg_nodes:
+            labels = call.copy()
+            labels['command'] = callname
+            labels['ip_port'] = ip_port
+            labels['process'] = cmd
+            cg_nodes[lbl] = CallGraph(labels)
+
+        if curr is not None:
+            cg_nodes[curr].add_child(cg_nodes[lbl])
+        else:
+            phony_root.add_child(cg_nodes[lbl])
+        curr = lbl
+
+
+MAX = 40000000
+cnt = 0
+
 for s, c0, c1 in rendezvous:
     # the target event
-    tgt_call = event_to_syscall(calltable, syscalls, events, c1, c0)
-    callname = calltable.resolve(int(tgt_call["syscall_number"]))  
-    src_call = event_to_syscall(calltable, syscalls, events, int(s['parent_thread_id']), int(s['parent_thread_event_id']))
-    callname2 = calltable.resolve(int(src_call["syscall_number"]))  
+    #tgt_call = event_to_syscall(calltable, syscalls, events, c1, c0)
+    #callname_t = calltable.resolve(int(tgt_call["syscall_number"]))  
+    #src_call = event_to_syscall(calltable, syscalls, events, int(s['parent_thread_id']), int(s['parent_thread_event_id']))
+    #callname_s = calltable.resolve(int(src_call["syscall_number"]))  
     
-    src_cmd = thread_to_commandline(threads, processes, int(s['parent_thread_id']))
-    tgt_cmd = thread_to_commandline(threads, processes, c1)
+    #src_cmd = thread_to_commandline(threads, processes, int(s['parent_thread_id']))
+    #tgt_cmd = thread_to_commandline(threads, processes, c1)
 
-    tgt_ip_port = syscall_to_ip_port(sockops, peerings, tgt_call)
-    src_ip_port = syscall_to_ip_port(sockops, peerings, src_call)
+    #tgt_ip_port = syscall_to_ip_port(sockops, peerings, tgt_call)
+    #src_ip_port = syscall_to_ip_port(sockops, peerings, src_call)
 
-    ident1 = (tgt_call["issuing_thread_tid"] , callname, c0, tgt_ip_port,src_cmd)
-    ident2 = (src_call["issuing_thread_tid"], callname2, s['parent_thread_event_id'], src_ip_port,tgt_cmd)
-
-
-    istr = ','.join(map(str, ident1))
-    istr2 = ','.join(ident2)
+    #ident_tgt = (tgt_call["issuing_thread_tid"] , callname_t, c0, tgt_ip_port,src_cmd)
+    #ident_src = (src_call["issuing_thread_tid"], callname_s, s['parent_thread_event_id'], src_ip_port,tgt_cmd)
 
 
-    if istr not in cg_nodes:
+    #istr_tgt = ','.join(map(str, ident_tgt))
+    #istr_src = ','.join(ident_src)
+
+
+    #(istr_src, src_call, callname_s, src_cmd, src_ip_port) = get_lbl(c1, '"' + c0 + '"')
+    (istr_src, src_call, callname_s, src_cmd, src_ip_port) = get_lbl(c1, str(c0))
+    
+    #(istr_tgt, tgt_call, callname_t, tgt_cmd, tgt_ip_port) = get_lbl(int(s['parent_thread_id']), int(s['parent_thread_event_id']))
+    (istr_tgt, tgt_call, callname_t, tgt_cmd, tgt_ip_port) = get_lbl(int(s['parent_thread_id']), s['parent_thread_event_id'])
+
+
+    if istr_tgt not in cg_nodes:
         labels = tgt_call.copy()
-        labels['command'] = callname2
+        labels['command'] = callname_t
         labels['ip_port'] = tgt_ip_port
-        cg_nodes[istr] = CallGraph(labels)
+        labels['process'] = tgt_cmd
+        cg_nodes[istr_tgt] = CallGraph(labels)
 
-    if istr2 not in cg_nodes:
+    if istr_src not in cg_nodes:
         labels = src_call.copy()
-        labels['command'] = callname
+        labels['command'] = callname_s
         labels['ip_port'] = src_ip_port
-        cg_nodes[istr2] = CallGraph(labels)
+        labels['process'] = src_cmd
+        cg_nodes[istr_src] = CallGraph(labels)
 
-    cg_nodes[istr2].add_child(cg_nodes[istr])
+    #print("ADD edge from %s to %s" % (istr_src, istr_tgt))
+
+    cnt += 1
+    if cnt < MAX:
+        #cg_nodes[istr_src].add_child(cg_nodes[istr_tgt])
+        cg_nodes[istr_tgt].add_child(cg_nodes[istr_src])
 
     #stag = src_call["issuing_thread_tid"]
     #ttag = tgt_call["issuing_thread_tid"]
     stag = src_ip_port
     ttag = tgt_ip_port
 
-    tag = (stag, callname)
+    tag = (stag, callname_s)
+    print("SRC TAG %s, %s, SRC CMD %s" % (stag, callname_s, src_cmd))
     if ttag not in last_message or last_message[ttag] != tag:
     #if True:
         if ttag not in frontier:
@@ -261,13 +318,13 @@ for s, c0, c1 in rendezvous:
         if st not in frontier[stag]:
             frontier[stag][st] = []
 
-        frontier[ttag][tt].append(istr)
-        frontier[stag][st].append(istr2)
+        frontier[ttag][tt].append(istr_tgt)
+        frontier[stag][st].append(istr_src)
         
 
         #dot.node(istr, label=tgt_call["issuing_thread_tid"] + " : " + callname)
         #dot.node(istr2,label=src_call["issuing_thread_tid"] + " : " + callname2)
-        dot.edge(istr2, istr, weight='1')
+        dot.edge(istr_src, istr_tgt, weight='1')
 
     last_message[ttag] = tag
 
@@ -276,51 +333,37 @@ for s, c0, c1 in rendezvous:
     #print(src_call["issuing_thread_tid"] + " : " + callname2 + " ---> " + tgt_call["issuing_thread_tid"] + " : " + callname)
 
 
-for idx,port in enumerate(frontier):
-    nm = "cluster_" + str(port)
-    #print("NAME is %s" % nm)
-    with dot.subgraph(name = nm) as c:
-        for thread in frontier[port]:
-            snm = "cluster_" + str(thread)
-            with c.subgraph(name=snm) as inner:
-                last = None
-                for event in sorted(frontier[port][thread], key=lambda x: int(x.split(',')[2])):
-                    #print("event %s" % event)
-                    if last is not None:
-                        # go back and figure out the source of this duplication for write calls
-                        if last != event:   
-                            inner.edge(last, event, weight='2')
-                            cg_nodes[last].add_child(cg_nodes[event])   
-                    last = event
-
-
 dot.render("foo2")
 
-
-
-
 # this is some wild imperative shit
+# possibly deprecate all this crap..
 possible_roots = []
 for node in cg_nodes:
     print("LABELS %s", cg_nodes[node].labels)
     possible_roots.append(cg_nodes[node])
 
-for node in cg_nodes:
+#for node in cg_nodes:
     #print("NODE %s val %s" % (node, cg_nodes[node]))
-    for child in cg_nodes[node].children:
+    #for child in cg_nodes[node].children:
         #print("DELETE %s" % child)
-        if child in possible_roots:
-            possible_roots.remove(child)
-        else:
-            print("missing child: %s" % child)
+        #if child in possible_roots:
+        #    possible_roots.remove(child)
+        #else:
+        #    print("missing child: %s" % child)
 
 
-phony_root = CallGraph({'name': 'phony root'}) 
-for root in possible_roots:
-    #print("ROOT %s" % root)
-    phony_root.add_child(root)
+#phony_root = CallGraph({'name': 'phony root'}) 
+#for root in possible_roots:
+#    #print("ROOT %s" % root)
+#    phony_root.add_child(root)
 
 print("getting totality")
+c = phony_root.has_cycle()
+if c:
+    print("THERE IS A CYCLE!! %s" % c.labels)
+    sys.exit(1)
+
+
 lbl_vals = phony_root.label_values()
 print("done")
 
@@ -328,10 +371,14 @@ print("done")
 rules = {
     'command': lambda x,y,z: x,
     'ip_port': lambda x,y,z: x,
-    'internal_uuid': index_of_memo,
-    'local_id': index_of_memo,
-    #'is_entry': lambda x,y,z: x
-    'is_entry': lambda x,y,z: x if z['command'] in ['connect', 'accept'] else False
+    'process': lambda x,y,z: x,
+    'issuing_thread_id': lambda x,y,z: x,
+    #'internal_uuid': index_of_memo,
+    #'local_id': index_of_memo,
+    #'internal_uuid': lambda x,y,z: x,
+    'local_id': lambda x,y,z: x,
+    'is_entry': lambda x,y,z: x
+    #'is_entry': lambda x,y,z: x if z['command'] in ['connect', 'accept'] else False
 }
 
 new_root = phony_root.transform(rules, lbl_vals).collapse()

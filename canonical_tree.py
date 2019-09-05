@@ -47,6 +47,18 @@ class CallGraph():
 
         return st
 
+    def has_cycle(self, cxt={}):
+        if self in cxt:
+            return self
+        else:
+            local_cxt = cxt.copy()
+            local_cxt[self] = True
+            for x in self.children:
+                c = x.has_cycle(local_cxt)
+                if c:
+                    return c
+            return False
+
     def nodes(self):
         cnt = 1
         for c in self.children:
