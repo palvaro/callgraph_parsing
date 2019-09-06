@@ -35,7 +35,8 @@ class CallGraph():
 
     def name(self, rule):
         #return str(self.labels)
-        return self.label(rule)
+        #return self.label(rule)
+        return str(id(self))
 
     def label(self, rule):
         #return self.labels.values()[0]
@@ -163,6 +164,12 @@ class CallGraph():
                 return self.labels == other.labels
             else:
                 for lbl in rule:
+                    if lbl not in self.labels:
+                        print("%s not local! %s" % (lbl, self.labels.keys()))
+                        return False
+                    if lbl not in other.labels:
+                        print("%s not other! %s  == %s" % (lbl, other.labels.keys(),other.labels))
+                        return False
                     if self.labels[lbl] != other.labels[lbl]:
                         return False
                 return True
