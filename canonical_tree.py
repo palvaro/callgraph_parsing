@@ -1,9 +1,6 @@
 import re
 
-# need to implement this thing as a memoizing function or we are done.
-
 sorts = {}
-
 def index_of_memo(x, y, z):
     if id(y) not in sorts:
         sorts[id(y)] = {}
@@ -27,11 +24,18 @@ class CallGraph():
         self.children = set()
         self.parents = set()
 
-    def add_child(self, child):
+    def add_child(self, child, r=True):
         self.children.add(child)
+        if r:
+            child.add_parent(self, False)
 
-    def add_parent(self, parent):
+    def add_parent(self, parent, r=True):
         self.parents.add(parent)
+    
+        if len(self.parents) > 1:
+            print("I (%s) have  parents", self.name({}))
+        if r:
+            parent.add_child(self, False)
 
     def name(self, rule):
         #return str(self.labels)
@@ -176,6 +180,12 @@ class CallGraph():
         else:
             return False
 
+    def i_am_baby(self, cuckoo, victim):
+        print("CUCKOO! %s %s" % (cuckoo.name(), victim.name()))
+        self.children.remove(victim)
+        self.children.add(cuckoo)
+        
+
     def collapse(self, rule=[]):
         # this one is gonna be tricky
         new_node = CallGraph(self.labels)
@@ -186,8 +196,19 @@ class CallGraph():
 
         for child in working:
             if child.label(rule) == "" or child.equiv(self, rule):
+                print("COLLAPSE %s into %s" % (child.name({}), self.name({})))
+                # eat the children
                 for c in child.children:
                     working.append(c)
+                # cuckoo the parents
+                if len(child.parents) > 1:
+                    for p in child.parents:
+                        print("%s has parent %s"  % (child.name({}), p.name({})))
+                        if  p != self:
+                            p.i_am_baby(self, child)
+                else:
+                    print("%s (%s) has only the one parent" % (child.name({}), child.labels))
+                        
             else:
                 new_node.add_child(child.collapse(rule)) 
 

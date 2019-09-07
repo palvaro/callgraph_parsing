@@ -36,11 +36,14 @@ rules = {
     'op': lambda x,y,z: x
 }
 
+print("OK OK") 
+
 r = root.transform(rules).collapse()
 
 root.todot(dot)
+
 r.todot(dot2)
-dot.render("test", view=True)
-dot2.render("test2", view=True)
+dot.render("test")
+dot2.render("test2")
 
 
