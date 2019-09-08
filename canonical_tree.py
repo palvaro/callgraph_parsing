@@ -33,7 +33,7 @@ class CallGraph():
         self.parents.add(parent)
     
         if len(self.parents) > 1:
-            print("I (%s) have  parents", self.name({}))
+            print("I (%s, %s) have  parents" % (self.name({}), self.labels))
         if r:
             parent.add_child(self, False)
 
@@ -137,6 +137,22 @@ class CallGraph():
         else:
             # for backwards compatibility while I play
             xform = rules
+        
+        for item in self.labels:
+            if item in xform:
+                new_labels[item] = xform[item](self.labels[item], totality.get(item, []), self.labels)
+                
+        self.labels = new_labels.copy()
+        for c in self.children:
+            c.transform(rules, totality)
+
+    def transform_old(self, rules, totality={}):
+        new_labels = {}
+        if 'transform' in rules and 'excise' in rules:
+            xform = rules['transform']
+        else:
+            # for backwards compatibility while I play
+            xform = rules
     
         for item in self.labels:
             if item in xform:
@@ -144,8 +160,8 @@ class CallGraph():
                 #exec("lmb = " + rules[item])
                 #lmb = eval(xform[item])
                 #new_labels[item] = lmb(self.labels[item], totality.get(item, []))
-                if item not in totality:
-                    print("%s is missing from map with keys %s!" % (item, totality.keys()))
+                #if item not in totality:
+                #    print("%s is missing from map with keys %s!" % (item, totality.keys()))
                 new_labels[item] = xform[item](self.labels[item], totality.get(item, []), self.labels)
        
             #print("ITREM %s" % item) 
@@ -157,7 +173,7 @@ class CallGraph():
 
         new_node = CallGraph(new_labels)
         for c in self.children:
-            new_node.add_child(c.transform(rules, totality))
+            new_node.add_child(c.transform_old(rules, totality))
 
         return new_node
 
@@ -181,12 +197,32 @@ class CallGraph():
             return False
 
     def i_am_baby(self, cuckoo, victim):
-        print("CUCKOO! %s %s" % (cuckoo.name(), victim.name()))
+        print("CUCKOO! %s %s" % (cuckoo.name({}), victim.name({})))
         self.children.remove(victim)
-        self.children.add(cuckoo)
-        
+        self.add_child(cuckoo)
 
     def collapse(self, rule=[]):
+        #print("collapse %s %s" % (self.name({}), self.labels))
+        working = []
+        for child in self.children:
+            working.append(child)
+
+        for child in working:
+            if child.label(rule) == "" or child.equiv(self, rule):
+                for c in child.children:
+                    self.add_child(c)
+                    working.append(c)
+                if len(child.parents) > 1:
+                    for p in child.parents:
+                        if p != self:
+                            p.i_am_baby(self, child)
+                self.children.remove(child)
+            else:
+                child.collapse(rule)
+            
+        
+
+    def collapse_old(self, rule=[]):
         # this one is gonna be tricky
         new_node = CallGraph(self.labels)
 
@@ -210,7 +246,7 @@ class CallGraph():
                     print("%s (%s) has only the one parent" % (child.name({}), child.labels))
                         
             else:
-                new_node.add_child(child.collapse(rule)) 
+                new_node.add_child(child.collapse_old(rule)) 
 
         return new_node
         

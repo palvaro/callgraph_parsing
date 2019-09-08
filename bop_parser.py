@@ -374,16 +374,19 @@ rules = {
     'process': lambda x,y,z: x,
     'issuing_thread_id': lambda x,y,z: x,
     #'internal_uuid': index_of_memo,
-    'local_id': index_of_memo,
+    #'local_id': index_of_memo,
     #'internal_uuid': lambda x,y,z: x,
     #'local_id': lambda x,y,z: x,
     #'is_entry': lambda x,y,z: x
     'is_entry': lambda x,y,z: x if z['command'] in ['connect', 'accept'] else False
 }
 
-new_root = phony_root.transform(rules, lbl_vals).collapse(['command', 'process', 'ip_port'])
+#new_root = phony_root.transform(rules, lbl_vals).collapse(['command', 'process', 'ip_port'])
+phony_root.transform(rules, lbl_vals)
+phony_root.collapse()
+
 #new_root = phony_root.transform(rules, lbl_vals).collapse()
 dt = Digraph(strict=True)
-new_root.todot(dt)
+phony_root.todot(dt)
 dt.render("baR")
 

@@ -30,20 +30,33 @@ root.add_child(d)
 
 dot = Digraph()
 dot2 = Digraph()
+dot3 = Digraph(strict=True)
 
 
 rules = {
-    'op': lambda x,y,z: x
+    'op': lambda x,y,z: x,
+    #'id': lambda x,y,z: x,
+    #'time': lambda x,y,z: x
 }
 
 print("OK OK") 
 
-r = root.transform(rules).collapse()
-
 root.todot(dot)
 
-r.todot(dot2)
+root.transform(rules)
+
+
+root.todot(dot2)
+
+
+root.collapse()
+root.collapse()
+
+root.todot(dot3)
+
 dot.render("test")
 dot2.render("test2")
+dot3.render("test3")
+
 
 
