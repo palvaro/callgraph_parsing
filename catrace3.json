@@ -1,0 +1,1 @@
+[{"traceId":"ba95ce34b2439e12","id":"ba95ce34b2439e12","kind":"CLIENT","name":"insert into cassandra_zipkin_example.users (email, name) values (?, ?) if not exists","timestamp":1585263035964000,"duration":62000,"localEndpoint":{"serviceName":"cassandra zipkin example","ipv4":"10.0.0.2"}}]
