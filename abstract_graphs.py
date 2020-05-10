@@ -26,7 +26,7 @@ def identity(x, y, z):
     return x
 
 
-class Node():
+class Node:
     def __init__(self, labels={}):
         self.labels = frozendict(labels)
         self.unchanging_hash = hash(self.labels)
@@ -91,9 +91,9 @@ class Node():
     
 
 
-class DAG():
-    def __init__(self, edges = set()):
-        self.edges = edges
+class DAG:
+    def __init__(self):
+        self.edges = set()
 
     def add_edge(self, left, right):
         self.edges.add((Node(left), Node(right)))
@@ -149,13 +149,6 @@ class DAG():
                     self.edges.add(a)
                 return True
             
-        #for d in deletions:
-        #    self.edges.remove(d)
-        #for a in additions:
-        #    self.edges.add(a)
-
-        #return len(deletions)
-
 
     def transform(self, rules):
         # first, gather up our totality
@@ -188,5 +181,15 @@ class DAG():
             dot.edge(l.ident(), r.ident())
 
         dot.render(name, view=True)
+
+    def __eq__(self, other):
+        return self.contains(other) and other.contains(self)
+            
+    def contains(self, other):
+        for l, r in other.edges:
+            if (l, r) not in self.edges:
+                return Fals
+        return True
+
             
         
