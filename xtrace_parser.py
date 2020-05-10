@@ -1,5 +1,5 @@
 from canonical_tree import CallGraph
-from abstract_graphs import DAG
+from abstract_graphs import DAG, identity
 from graphviz import Digraph
 from frozendict import frozendict
 import json
@@ -53,6 +53,23 @@ class XTraceParser():
         return dag
 
 if __name__ == "__main__":
-    trace = XTraceParser("hdfs_trace.json")
+
+    rules = {
+        #'Agent': identity,
+        #'TaskID': identity,
+        #'Label': identity,
+        #'ProcessName': identity,
+        #'Title': identity,
+        'Operation': identity,
+        #'Host': identity,
+        #'Source': identity,
+        #'ProcessID': identity
+    
+    }
+
+    trace = XTraceParser("xtrace_data/hdfs_trace.json")
     trace.process()
     dag = trace.to_abstract()
+    #dag.transform(rules)
+    #dag.collapse()
+    dag.todot("foo")
