@@ -57,6 +57,9 @@ class Node:
     def __hash__(self):
         #return hash(self.labels)
         return self.unchanging_hash
+
+    def __str__(self):
+        return str(self.labels) + " (AKA " + str(self.unchanging_hash) + ")"
         
     def label(self, rule):
         st = ''
@@ -74,7 +77,6 @@ class Node:
             xform = rules['transform']
         else:
             # for backwards compatibility while I play
-            print("bw")
             xform = rules
 
         for item in self.labels:
@@ -94,6 +96,7 @@ class Node:
 class DAG:
     def __init__(self):
         self.edges = set()
+        self.lastrules = {}
 
     def add_edge(self, left, right):
         self.edges.add((Node(left), Node(right)))
@@ -160,6 +163,7 @@ class DAG:
                     if label not in totality:
                         totality[label] = set()
                     totality[label].add(x.labels[label])
+        self.lastrules = rules
 
         # then do the rest
         for l, r in self.edges:
@@ -185,11 +189,36 @@ class DAG:
     def __eq__(self, other):
         return self.contains(other) and other.contains(self)
             
-    def contains(self, other):
+    def contains_naive(self, other):
         for l, r in other.edges:
             if (l, r) not in self.edges:
-                return Fals
+                return False
         return True
 
+
+    def contains_naive2(self, other):
+        # one way to do this interpretation: bag of labels
+        obag = map(lambda x: (x[0].label(self.lastrules), x[1].label(self.lastrules)), other.edges)
+        lbag = map(lambda x: (x[0].label(self.lastrules), x[1].label(self.lastrules)), self.edges)
+
+        for l, r in obag:
+            if (l, r) not in lbag:
+                print("Missing from outer: %s ---> %s" % (l, r))
+                return False
+        return True
+
+
+    def contains(self, other):
+        return self.minus(other) == other.minus(self) == []
+
+    def minus(self, other):
+        obag = list(map(lambda x: (x[0].label(self.lastrules), x[1].label(self.lastrules)), other.edges))
+        lbag = map(lambda x: (x[0].label(self.lastrules), x[1].label(self.lastrules)), self.edges)
+        ret = []
+        for l, r in lbag:
+            if (l, r) not in obag:
+                ret.append((l,r))
+
+        return ret
             
         
