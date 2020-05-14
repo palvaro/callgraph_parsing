@@ -3,12 +3,12 @@ import sys
 
 
 rules = {
-    'kind': identity,
+    #'kind': identity,
     'tags_ipv4': identity,
     'tags_serviceName': identity,
-    'tags_request': identity,
+    #'tags_request': identity,
     'tags_client': identity,
-    'tags_coordinator': identity
+    #'tags_coordinator': identity
     
 }
 
@@ -16,8 +16,8 @@ rules = {
 p = ZipkinParser(sys.argv[1])
 p.process()
 dag = p.to_abstract()
-dag.transform(rules)
-dag.collapse()
+#dag.transform(rules)
+#dag.collapse()
 
 
 dag.todot("abs")
