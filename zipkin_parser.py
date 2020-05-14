@@ -1,8 +1,8 @@
 from canonical_tree import CallGraph
-from abstract_graphs import DAG
+from abstract_graphs import DAG, identity
 from graphviz import Digraph
 from frozendict import frozendict
-import json
+import json, sys
 
 def draw_graph(tree, name, rule):
     dot = Digraph(name)
@@ -25,6 +25,10 @@ class ZipkinParser():
                 t = type(span[key])
                 if t in (str, int, float):
                     labels[key] = span[key]
+                elif t == dict:
+                    for k in span[key]:
+                        nk = key + "_" + k
+                        labels[nk] = span[key][k]
             self.map[span['id']] = labels
     
         for key in self.map:
@@ -33,6 +37,7 @@ class ZipkinParser():
                 parent = self.map[parent_key]
                 pair = (frozendict(parent),  frozendict(self.map[key]))
                 self.edges.add(pair)
+                    
 
 
     def to_abstract(self):
@@ -40,14 +45,7 @@ class ZipkinParser():
         for l, r in self.edges:
             dag.add_edge(l, r)
         return dag
+
+
             
-
-p = ZipkinParser("catrace2.json")
-p.process()
-dag = p.to_abstract()
-
-
-dag.todot("abs")
-
-
 
