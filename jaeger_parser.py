@@ -47,7 +47,7 @@ class JaegerParser():
             self.map[span['spanID']] = labels
 
         for key in self.map:
-            if 'parent_span' in self.map[key].labels:
+            if 'parent_span' in self.map[key].keys():
                 parent_key = self.map[key]['parent_span']#.encode('ascii', 'ignore')
                 parent = self.map[parent_key]
                 #parent.add_child(self.map[key])
