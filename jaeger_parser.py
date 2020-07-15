@@ -1,5 +1,8 @@
-from canonical_tree import CallGraph
+#from canonical_tree import CallGraph, identity, simple_name, index_of
 from graphviz import Digraph
+from abstract_graphs import DAG, identity, simple_name
+from frozendict import frozendict
+
 import json
 
 class JaegerParser():
@@ -9,6 +12,7 @@ class JaegerParser():
         fp.close()
     
         self.map = {}
+        self.edges = set()
        
     def process(self):
         data = self.jsn['data']
@@ -39,16 +43,24 @@ class JaegerParser():
             for tag in processes[span['processID']]['tags']:
                 labels['process-' + tag['key']] = tag['value']
 
-            node = CallGraph(labels)
-            self.map[span['spanID']] = node
+            #node = CallGraph(labels)
+            self.map[span['spanID']] = labels
 
         for key in self.map:
             if 'parent_span' in self.map[key].labels:
-                parent_key = self.map[key].labels['parent_span']#.encode('ascii', 'ignore')
+                parent_key = self.map[key]['parent_span']#.encode('ascii', 'ignore')
                 parent = self.map[parent_key]
-                parent.add_child(self.map[key])
+                #parent.add_child(self.map[key])
+                pair = ( frozendict(parent), frozendict(self.map[key]) )
+                self.edges.add(pair)
             else:
                 self.root = self.map[key]
 
 
         return self.root
+
+    def to_abstract(self):
+        dag = DAG()
+        for l, r in self.edges:
+            dag.add_edge(l, r)
+        return dag
