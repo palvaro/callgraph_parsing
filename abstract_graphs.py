@@ -1,5 +1,6 @@
 from graphviz import Digraph
 from frozendict import frozendict
+import sys
 
 sorts = {}
 def index_of_memo(x, y, z):
@@ -106,7 +107,7 @@ class DAG:
         iters = 0
         while self.collapse_once(rule):
             #dot = self.todot("foo" + str(iters))
-            print(".")
+            sys.stderr.write(".")
             iters += 1
             #if iters > 10:
             #    return iters
@@ -220,5 +221,44 @@ class DAG:
                 ret.append((l,r))
 
         return ret
+
+    def load_db(self):
+        ddl = """create table edge (
+                    src varchar2[100],
+                    dst varchar2[100]
+                );
+                create table nodelabels (
+                    node varchar2[100],
+                    label varchar2[100],
+                    value varchar2[255]
+                );
+                create view reachable as
+                    with recursive
+                        path(x, y) as (
+                            select src, dst from edge
+                                union all
+                            select x, dst from edge e, path p 
+                                where e.src = p.y
+
+                        )
+                    select * from path;
+
+                create view label_reach as
+                    select n1.label as f_lbl, n1.value as f_val, n2.label as t_lbl, n2.value as t_val
+                        from reachable p, nodelabels n1, nodelabels n2
+                            where p.x = n1.node and p.y = n2.node;
+                """ 
+        dml = ''
+        nodes = set()
+        for l,r in self.edges:
+            nodes.add(l)
+            nodes.add(r)
+            dml += "insert into edge values('" + str(l.unchanging_hash) + "', '" + str(r.unchanging_hash) +  "');\n"
+        for n in nodes:
+            for l in n.labels:
+                dml += "insert into nodelabels values ('" + str(n.unchanging_hash) + "', '" + l + "', '" + str(n.labels[l]) + "');\n"
+
+
+        return ddl + dml
             
         
