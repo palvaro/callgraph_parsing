@@ -34,6 +34,9 @@ class JaegerParser():
             for tag in span['tags']:
                 labels[tag['key']] = tag['value']
 
+            if 'status.code' not in labels.keys():
+                labels['status.code'] = 1000
+
             if 'references' in span:
                 for item in span['references']:
                     if item['refType'] == "CHILD_OF":
@@ -64,3 +67,32 @@ class JaegerParser():
         for l, r in self.edges:
             dag.add_edge(l, r)
         return dag
+
+
+def truncate_cache(x,y,z):  
+    keywords = ['Get', 'Set', 'Find', 'Update']
+    for i in keywords:
+        if i in x:
+            ind = x.index(i)
+            x = x[0:ind+len(i)]
+    return x
+
+
+def truncate_hs(x,y,z):
+    keywords = ['Get', 'List']
+    for i in keywords:
+        if i in x:
+            ind=x.index(i)
+            x=x[0:ind+len(i)]
+    x=x.replace('.hipstershop','')
+    x=x.replace('Service','svc')  
+    x=x.replace(' ','.') 
+    return x
+ 
+
+
+
+
+
+
+
