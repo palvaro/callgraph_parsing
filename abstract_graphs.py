@@ -34,7 +34,7 @@ class Node:
 
     def __eq__(self, other):
         #return self.labels == other.labels
-        return self.unchanging_hash == self.unchanging_hash
+        return self.unchanging_hash == other.unchanging_hash
 
     def equiv(self, other, rule):
         if isinstance(other, self.__class__):
