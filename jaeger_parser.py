@@ -35,7 +35,7 @@ class JaegerParser():
                 labels[tag['key']] = tag['value']
 
             if 'status.code' not in labels.keys():
-                labels['status.code'] = 1000
+                labels['status.code'] = -1
 
             if 'references' in span:
                 for item in span['references']:
@@ -52,10 +52,13 @@ class JaegerParser():
         for key in self.map:
             if 'parent_span' in self.map[key].keys():
                 parent_key = self.map[key]['parent_span']#.encode('ascii', 'ignore')
-                parent = self.map[parent_key]
-                #parent.add_child(self.map[key])
-                pair = ( frozendict(parent), frozendict(self.map[key]) )
-                self.edges.add(pair)
+                if parent_key in self.map:
+                    parent = self.map[parent_key]
+                    #parent.add_child(self.map[key])
+                    pair = ( frozendict(parent), frozendict(self.map[key]) )
+                    self.edges.add(pair)
+                else:
+                    self.root = self.map[key]
             else:
                 self.root = self.map[key]
 
