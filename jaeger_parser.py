@@ -34,6 +34,20 @@ class JaegerParser():
             for tag in span['tags']:
                 labels[tag['key']] = tag['value']
 
+            if 'http.status_code' in labels.keys():
+                if labels['http.status_code'] == 200:
+                    labels['status.code'] = 0
+                else:
+                    labels['status.code'] = 1
+            
+            if "error" in labels.keys():
+                if labels["error"] == 'true':
+                    labels['status.code'] = 1
+            
+            if 'otel.status_code' in labels.keys():
+                if labels['otel.status_code'] == 'ERROR':
+                    labels['status.code'] = 1
+
             if 'status.code' not in labels.keys():
                 labels['status.code'] = -1
 
