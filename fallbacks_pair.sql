@@ -22,4 +22,4 @@ create view counts as
 create view fallbacks as
   select c.fr, c.t, c.f
   from counts as c
-  where c.occ > (select occ from counts where fr = c.fr and t = c.t and f != c.f);
+  where c.occ >= (select ifnull((select sum(occ) from counts where fr = c.fr and t = c.t and f != c.f), 0));
